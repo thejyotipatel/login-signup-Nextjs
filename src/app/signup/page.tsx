@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Toaster, toast } from 'react-hot-toast'
+import { toast } from 'react-hot-toast'
 
 const SignUpPage = () => {
   const router = useRouter()
-  const [loading, setLoading] = useState(false)
-  const [disabledBtn, setDisabledBtn] = useState(false)
+  const [loading, setLoading] = React.useState(false)
+  const [disabledBtn, setDisabledBtn] = React.useState(false)
   const [user, setUser] = React.useState({
     email: '',
     password: '',
@@ -19,10 +19,12 @@ const SignUpPage = () => {
     try {
       setLoading(true)
       const response = await axios.post('/api/users/signup', user)
-      console.log('sign up success', response.data)
+      console.log('sign up success', response)
       toast.success(response.data.message)
 
-      router.push('/login')
+      if (response.data.success) {
+        router.push('/profile')
+      }
     } catch (error: any) {
       console.log('sign Up failed', error)
 
@@ -46,7 +48,6 @@ const SignUpPage = () => {
 
   return (
     <>
-      <Toaster position='top-center' reverseOrder={false} gutter={8} />
       <div className='bg-gray-100 flex justify-center items-center h-screen'>
         <div className='max-w-md w-full bg-white p-8  rounded shadow-lg'>
           <h2 className='text-2xl font-bold mb-4'>Sign Up</h2>
