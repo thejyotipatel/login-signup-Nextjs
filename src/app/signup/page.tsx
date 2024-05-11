@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import toast from 'react-hot-toast'
+import { Toaster, toast } from 'react-hot-toast'
 
 const SignUpPage = () => {
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [disabledBtn, setDisabledBtn] = useState(false)
   const [user, setUser] = React.useState({
     email: '',
     password: '',
@@ -16,8 +18,13 @@ const SignUpPage = () => {
   const onSignUp = async () => {
     try {
       setLoading(true)
+      const response = await axios.post('/api/users/signup', user)
+      console.log('sign up success', response.data)
+      toast.success(response.data.message)
+
+      router.push('/login')
     } catch (error: any) {
-      console.log('signup failed', error.message)
+      console.log('sign Up failed', error)
 
       toast.error(error.message)
     } finally {
@@ -31,14 +38,35 @@ const SignUpPage = () => {
       user.password.length > 0 &&
       user.username.length > 0
     ) {
+      setDisabledBtn(false)
+    } else {
+      setDisabledBtn(true)
     }
   }, [user])
 
   return (
     <>
+      <Toaster position='top-center' reverseOrder={false} gutter={8} />
       <div className='bg-gray-100 flex justify-center items-center h-screen'>
-        <div className='max-w-md w-full bg-white p-8 rounded shadow-lg'>
+        <div className='max-w-md w-full bg-white p-8  rounded shadow-lg'>
           <h2 className='text-2xl font-bold mb-4'>Sign Up</h2>
+
+          <div className='mb-4'>
+            <label
+              htmlFor='username'
+              className='block text-gray-700 font-semibold mb-2'
+            >
+              Username
+            </label>
+            <input
+              type='text'
+              id='username'
+              name='username'
+              className='w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500'
+              value={user.username}
+              onChange={(e) => setUser({ ...user, username: e.target.value })}
+            />
+          </div>
 
           <div className='mb-4'>
             <label
@@ -56,22 +84,7 @@ const SignUpPage = () => {
               onChange={(e) => setUser({ ...user, email: e.target.value })}
             />
           </div>
-          <div className='mb-4'>
-            <label
-              htmlFor='username'
-              className='block text-gray-700 font-semibold mb-2'
-            >
-              Username
-            </label>
-            <input
-              type='text'
-              id='username'
-              name='username'
-              className='w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500'
-              value={user.username}
-              onChange={(e) => setUser({ ...user, username: e.target.value })}
-            />
-          </div>
+
           <div className='mb-6'>
             <label
               htmlFor='password'
@@ -88,16 +101,18 @@ const SignUpPage = () => {
               onChange={(e) => setUser({ ...user, password: e.target.value })}
             />
           </div>
+
           <div className='mb-4 text-center'>
             <button
               onClick={onSignUp}
               type='submit'
-              className='w-full bg-blue-500 text-white font-semibold px-4 py-2 rounded hover:bg-blue-600 transition duration-200'
-              disabled={loading}
+              className={`w-full bg-blue-500 text-white font-semibold px-4 py-2 rounded hover:bg-blue-600 transition duration-200  `}
+              disabled={disabledBtn}
             >
               {loading ? 'Processing' : 'Sign Up'}
             </button>
           </div>
+
           <p className='text-center text-gray-700'>
             Already have an account?
             <Link href='/login' className='text-blue-500 font-semibold ml-1'>
