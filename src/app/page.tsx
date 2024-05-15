@@ -5,7 +5,7 @@ export default function Home() {
     <>
       <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100'>
         {/* SVG container */}
-        <div className=' w-96'>
+        <div className=' max-w-96 w-full'>
           {/* Your SVG code here */}
           {/* Example: */}
           <img src='/Hello-cuate.svg' alt='Hello-cuate' />
