@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 
 export default function Home() {
@@ -8,7 +9,7 @@ export default function Home() {
         <div className=' max-w-96 w-full'>
           {/* Your SVG code here */}
           {/* Example: */}
-          <img src='/Hello-cuate.svg' alt='Hello-cuate' />
+          <Image src='/Hello-cuate.svg' alt='Hello-cuate' />
         </div>
 
         {/* Login/Sign Up buttons */}
